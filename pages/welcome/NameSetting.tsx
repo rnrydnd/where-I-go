@@ -34,7 +34,7 @@ export default function NameSetting({navigation}: any) {
         <Text style={tw`pb-5 text-color5 text-2xl font-medium`}>Welcome to Where-I-Go.</Text>
         <Text style={tw`pb-10 text-color5 text-sm`}>This app is for people who wonder about the purpose of life. It helps them identify and pursue their most important values and goals.</Text>
         <Text style={tw`pb-3 text-color5 text-sm`}>My friend, what is your name?</Text>
-        <InputWithBtn onSubmit={handleSubmit} value={name} keepInputText />
+        <InputWithBtn onSubmit={handleSubmit} value={name} keepInputText autoFocus={true} placeholder='Enter name' />
         <StatusBar style="auto" />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

@@ -29,7 +29,6 @@ export default function InputWithBtn({onSubmit, value, tailwindStyle = '', keepI
         ref={(ref) => inputRef && (inputRef.current = ref)}
         style={tw`px-2 flex-1 h-10 bg-color5 rounded`} 
         autoFocus={autoFocus}
-        returnKeyType='done'
         onChangeText={setText}
         value={text}
         onSubmitEditing={_onSubmit}

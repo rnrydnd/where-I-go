@@ -1,20 +1,20 @@
 import { View, Text, StyleSheet, Button } from "react-native";
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // type HomeProps = {
 //   navigation: NativeStackNavigationProp<{}, 'Home'>;
-// } 
+// }
 
-export default function Home({navigation}: any) {
+export default function Home({ navigation }: any) {
   const moveTo = () => {
-    navigation.navigate('NameSetting');
-  }
+    navigation.navigate("NameSetting");
+  };
   const checkId = async () => {
-    const name = await AsyncStorage.getItem('name');
-    console.log('check name : ', name);
-  }
+    const name = await AsyncStorage.getItem("name");
+    console.log("check name : ", name);
+  };
 
   return (
     <View style={styles.container}>
@@ -29,8 +29,8 @@ export default function Home({navigation}: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

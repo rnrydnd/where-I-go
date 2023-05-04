@@ -9,6 +9,7 @@ import NameSetting from './pages/welcome/NameSetting';
 import Greeting from './pages/process/Greeting';
 import Home from './pages/Home';
 import KeywordSetting from './pages/welcome/KeywordSetting';
+import FloatingMode from './pages/FloatingMode';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,7 @@ export default function App() {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="NameSetting" component={NameSetting} />
         <Stack.Screen name="KeywordSetting" component={KeywordSetting} />
+        <Stack.Screen name="FloatingMode" component={FloatingMode} />
         <Stack.Screen name="Greeting" component={Greeting} />
       </Stack.Navigator>
     </NavigationContainer>

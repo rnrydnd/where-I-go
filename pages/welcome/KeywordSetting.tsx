@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useRef, useEffect } from "react";
+import React, {useRef, useEffect, useContext, ReactNode} from "react";
 import {
   View,
   Text,
@@ -8,34 +8,19 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import tw, { styles } from "../../lib/tailwind";
+import {StatusBar} from "expo-status-bar";
+import tw, {styles} from "../../lib/tailwind";
 import InputWithBtn from "../../components/InputWithBtn";
-import Svg, { Path } from "react-native-svg";
-import { useHeaderHeight } from "@react-navigation/elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Svg, {Path} from "react-native-svg";
+import {useHeaderHeight} from "@react-navigation/elements";
 import Keyword from "../../types/keyword";
+import {DispatchContext} from "../../context/AppContext";
 
-export default function KeywordSetting({ navigation }: any) {
-  const inputRef = useRef<MutableRefObject>(null);
-  const scrollViewRef = useRef(null);
-  const [keywordValue, setKeywordValue] = React.useState<string>("");
+export default function KeywordSetting({navigation}: any) {
+  const {submitKeywords} = useContext(DispatchContext);
+  const inputRef = useRef(null);
+  const scrollViewRef = useRef<any>(null);
   const [keywordList, setKeywordList] = React.useState<string[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const keywords = await AsyncStorage.getItem("keywords");
-
-      if (keywords) {
-        const keywordObjectList = JSON.parse(keywords);
-        const keywordList = keywordObjectList.map(
-          (keywordObject: Keyword) => keywordObject.keyword
-        );
-        console.log("keywords exist? ", keywordList);
-        setKeywordList(keywordList);
-      }
-    })();
-  }, []);
 
   const handleSubmit = (keyword: string) => {
     if (!keyword.trim()) {
@@ -47,7 +32,7 @@ export default function KeywordSetting({ navigation }: any) {
 
   useEffect(() => {
     setTimeout(() => {
-      scrollViewRef.current?.scrollTo({ y: 100000, animated: true });
+      scrollViewRef.current?.scrollTo({y: 100000, animated: true});
     }, 50);
   }, [keywordList]);
 
@@ -68,19 +53,12 @@ export default function KeywordSetting({ navigation }: any) {
         keyword: keyword,
         totalScore: 0,
         scoreHistory: [],
+        createDate: new Date(),
+        deleteDate: undefined,
       };
     });
-    await AsyncStorage.setItem(
-      "keywords",
-      JSON.stringify(keywordObjectList),
-      (error) => {
-        if (error) {
-          console.error("keywords submit error : ", error);
-        } else {
-          navigation.navigate("FloatingMode");
-        }
-      }
-    );
+
+    submitKeywords(keywordObjectList, () => navigation.navigate("Tabs"));
   };
 
   return (
@@ -146,7 +124,6 @@ export default function KeywordSetting({ navigation }: any) {
             <InputWithBtn
               tailwindStyle={`pt-5 w-full`}
               onSubmit={handleSubmit}
-              value={keywordValue}
               inputRef={inputRef}
               placeholder="Enter keyword"
               blurOnSubmit={false}
@@ -161,7 +138,7 @@ export default function KeywordSetting({ navigation }: any) {
             <Text style={tw`text-color5 font-medium`}>Save and Next</Text>
           </TouchableHighlight>
 
-          <StatusBar backgroundColor="bg-color1" />
+          <StatusBar backgroundColor="bg-color1"/>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

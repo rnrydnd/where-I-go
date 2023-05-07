@@ -1,45 +1,62 @@
-
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useEffect } from 'react';
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import React, {useContext, useEffect} from 'react';
+import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NameSetting from './pages/welcome/NameSetting';
 import Greeting from './pages/process/Greeting';
 import Home from './pages/Home';
 import KeywordSetting from './pages/welcome/KeywordSetting';
 import FloatingMode from './pages/FloatingMode';
+import AppProvider, {StateContext} from './context/AppContext';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   const navigationRef = useNavigationContainerRef();
+  const {name} = useContext(StateContext)
 
   useEffect(() => {
-    console.log('start useEffect', navigationRef.isReady());
     if (!navigationRef.isReady()) return;
-    console.log('navigationRef.isReady()');
+    console.log('navigationRef.isReady() : ', name);
     (async () => {
-      const userName = await AsyncStorage.getItem('name');
-      if(userName) {
-        navigationRef.navigate('Greeting');
+      if (name) {
+        navigationRef.navigate('Tabs');
       } else {
-        navigationRef.navigate('NameSetting');
+        navigationRef.navigate('StartGuide');
       }
     })()
-  } , [navigationRef])
+  }, [navigationRef])
 
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="NameSetting" component={NameSetting} />
-        <Stack.Screen name="KeywordSetting" component={KeywordSetting} />
-        <Stack.Screen name="FloatingMode" component={FloatingMode} />
-        <Stack.Screen name="Greeting" component={Greeting} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AppProvider>
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="StartGuide" component={StartGuideNavigator}/>
+          <Stack.Screen name="Tabs" component={TabNavigator} options={{gestureEnabled: false}}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppProvider>
   );
+}
 
+function StartGuideNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="NameSetting" component={NameSetting}/>
+      <Stack.Screen name="KeywordSetting" component={KeywordSetting}/>
+    </Stack.Navigator>
+  );
+}
+
+function TabNavigator() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Home}/>
+      <Tab.Screen name="FloatingMode" component={FloatingMode}/>
+      <Tab.Screen name="Greeting" component={Greeting}/>
+    </Tab.Navigator>
+  );
 }

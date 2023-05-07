@@ -7,35 +7,22 @@ import {
   View,
   Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import tw, { styles } from "../../lib/tailwind";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {StatusBar} from "expo-status-bar";
+import tw, {styles} from "../../lib/tailwind";
 import InputWithBtn from "../../components/InputWithBtn";
-import { useEffect, useState } from "react";
+import {useContext, useEffect} from "react";
+import {DispatchContext, StateContext} from "../../context/AppContext";
 
-export default function NameSetting({ navigation }: any) {
-  const [name, setName] = useState<string>("");
-
-  useEffect(() => {
-    (async () => {
-      const name = await AsyncStorage.getItem("name");
-      if (name) setName(name);
-    })();
-  }, []);
+export default function NameSetting({navigation}: any) {
+  const {name} = useContext(StateContext);
+  const {submitName} = useContext(DispatchContext);
 
   const handleSubmit = async (name: string) => {
     if (!name.trim()) {
       Alert.alert("Please enter your name.");
       return;
     }
-
-    await AsyncStorage.setItem("name", name, (error) => {
-      if (error) {
-        console.error("name submit error : ", error);
-      } else {
-        navigation.navigate("KeywordSetting");
-      }
-    });
+    submitName(name, () => navigation.navigate("KeywordSetting"));
   };
 
   return (
@@ -64,7 +51,7 @@ export default function NameSetting({ navigation }: any) {
             placeholder="Enter name"
             returnKeyType="go"
           />
-          <StatusBar style="auto" />
+          <StatusBar style="auto"/>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

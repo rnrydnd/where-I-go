@@ -1,7 +1,7 @@
-import React, {createContext, useEffect, useMemo, useState} from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 import Keyword from "../types/keyword";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {Alert} from "react-native";
+import { Alert } from "react-native";
 
 interface DispatchContextProps {
   submitName: (name: string, callBack: () => void) => void;
@@ -14,17 +14,15 @@ interface StateContextProps {
 }
 
 export const DispatchContext = createContext<DispatchContextProps>({
-  submitName: () => {
-  },
-  submitKeywords: () => {
-  },
+  submitName: () => {},
+  submitKeywords: () => {},
 });
 export const StateContext = createContext<StateContextProps>({
   name: "",
   keywords: [],
 });
 
-function AppProvider({children}: { children: React.ReactNode }) {
+function AppProvider({ children }: { children: React.ReactNode }) {
   const [name, setName] = useState<string>("");
   const [keywords, setKeywords] = useState<Keyword[]>([]);
 
@@ -38,7 +36,7 @@ function AppProvider({children}: { children: React.ReactNode }) {
   }, []);
 
   const submitName = async (v: string, callBack: () => void) => {
-    await AsyncStorage.setItem("name", name, (error) => {
+    await AsyncStorage.setItem("name", v, (error) => {
       if (error) {
         Alert.alert("Error", "Failed to save name.");
       } else {
@@ -56,11 +54,10 @@ function AppProvider({children}: { children: React.ReactNode }) {
         callBack();
       }
     });
-  }
+  };
 
-
-  const dispatch = useMemo(() => ({submitName, submitKeywords}), []);
-  const state = useMemo(() => ({name, keywords}), [name, keywords]);
+  const dispatch = useMemo(() => ({ submitName, submitKeywords }), []);
+  const state = useMemo(() => ({ name, keywords }), [name, keywords]);
 
   return (
     <StateContext.Provider value={state}>

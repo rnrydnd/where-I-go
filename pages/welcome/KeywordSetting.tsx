@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useContext, ReactNode} from "react";
+import React, { useRef, useEffect, useContext, ReactNode } from "react";
 import {
   View,
   Text,
@@ -8,19 +8,24 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import {StatusBar} from "expo-status-bar";
-import tw, {styles} from "../../lib/tailwind";
+import { StatusBar } from "expo-status-bar";
+import tw, { styles } from "../../lib/tailwind";
 import InputWithBtn from "../../components/InputWithBtn";
-import Svg, {Path} from "react-native-svg";
-import {useHeaderHeight} from "@react-navigation/elements";
+import Svg, { Path } from "react-native-svg";
+import { useHeaderHeight } from "@react-navigation/elements";
 import Keyword from "../../types/keyword";
-import {DispatchContext} from "../../context/AppContext";
+import { DispatchContext, StateContext } from "../../context/AppContext";
 
-export default function KeywordSetting({navigation}: any) {
-  const {submitKeywords} = useContext(DispatchContext);
+export default function KeywordSetting({ navigation }: any) {
+  const { keywords } = useContext(StateContext);
+  const { submitKeywords } = useContext(DispatchContext);
   const inputRef = useRef(null);
   const scrollViewRef = useRef<any>(null);
   const [keywordList, setKeywordList] = React.useState<string[]>([]);
+
+  useEffect(() => {
+    if (keywords) navigation.navigate("Tabs");
+  }, []);
 
   const handleSubmit = (keyword: string) => {
     if (!keyword.trim()) {
@@ -32,7 +37,7 @@ export default function KeywordSetting({navigation}: any) {
 
   useEffect(() => {
     setTimeout(() => {
-      scrollViewRef.current?.scrollTo({y: 100000, animated: true});
+      scrollViewRef.current?.scrollTo({ y: 100000, animated: true });
     }, 50);
   }, [keywordList]);
 
@@ -138,7 +143,7 @@ export default function KeywordSetting({navigation}: any) {
             <Text style={tw`text-color5 font-medium`}>Save and Next</Text>
           </TouchableHighlight>
 
-          <StatusBar backgroundColor="bg-color1"/>
+          <StatusBar backgroundColor="bg-color1" />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

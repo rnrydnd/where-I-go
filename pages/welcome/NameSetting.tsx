@@ -7,15 +7,15 @@ import {
   View,
   Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import tw, { styles } from "../../lib/tailwind";
+import {StatusBar} from "expo-status-bar";
+import tw, {styles} from "../../lib/tailwind";
 import InputWithBtn from "../../components/InputWithBtn";
-import { useContext, useEffect, useState } from "react";
-import { DispatchContext, StateContext } from "../../context/AppContext";
+import {useContext, useEffect, useState} from "react";
+import {DispatchContext, StateContext} from "../../context/AppContext";
 
-export default function NameSetting({ navigation }: any) {
-  const { name } = useContext(StateContext);
-  const { submitName } = useContext(DispatchContext);
+export default function NameSetting({navigation}: any) {
+  const {name} = useContext(StateContext);
+  const {submitName} = useContext(DispatchContext);
   const [readyToRender, setReadyToRender] = useState(false);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function NameSetting({ navigation }: any) {
                 placeholder="Enter name"
                 returnKeyType="go"
               />
-              <StatusBar style="auto" />
+              <StatusBar style="auto"/>
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>

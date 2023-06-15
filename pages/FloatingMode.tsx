@@ -1,16 +1,15 @@
-import { View, Text, StyleSheet, Button } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useContext, useEffect } from "react";
-import { DispatchContext, StateContext } from "../context/AppContext";
+import {View, Text, StyleSheet, Button} from "react-native";
+import {StatusBar} from "expo-status-bar";
+import {useContext, useEffect} from "react";
+import {DispatchContext, StateContext} from "../context/AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Keyword from "../types/keyword";
 
-export default function FloatingMode({ navigation }: any) {
-  const { keywords, name } = useContext(StateContext);
+export default function FloatingMode({navigation}: any) {
+  const {keywords, name} = useContext(StateContext);
 
   useEffect(() => {
-    console.log("is keywords? ", keywords);
-    console.log("is name? ", name);
+    navigation.navigate("Rating");
   }, []);
 
   const onDeleteName = () => {
@@ -25,7 +24,7 @@ export default function FloatingMode({ navigation }: any) {
       })}
       <Button title="delete name" onPress={onDeleteName}></Button>
 
-      <StatusBar style="auto" />
+      <StatusBar style="auto"/>
     </View>
   );
 }

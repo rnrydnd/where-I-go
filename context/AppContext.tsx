@@ -1,12 +1,13 @@
-import React, {createContext, useEffect, useMemo, useState} from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 import Keyword from "../types/keyword";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {Alert} from "react-native";
+import { Alert } from "react-native";
+import _ from "lodash";
 
 interface DispatchContextProps {
   submitName: (name: string, callBack: () => void) => void;
   submitKeywords: (keywords: Keyword[], callBack: () => void) => void;
-  ratingKeyword: (keyword: string, rating: "plus" | "minus") => void;
+  ratingKeyword: (keyword: string, rating: "plus" | "minus") => Promise<number>;
 }
 
 interface StateContextProps {
@@ -15,19 +16,16 @@ interface StateContextProps {
 }
 
 export const DispatchContext = createContext<DispatchContextProps>({
-  submitName: () => {
-  },
-  submitKeywords: () => {
-  },
-  ratingKeyword: () => {
-  },
+  submitName: () => {},
+  submitKeywords: () => {},
+  ratingKeyword: async () => 0,
 });
 export const StateContext = createContext<StateContextProps>({
   name: "",
   keywords: [],
 });
 
-function AppProvider({children}: { children: React.ReactNode }) {
+function AppProvider({ children }: { children: React.ReactNode }) {
   const [name, setName] = useState<string>("");
   const [keywords, setKeywords] = useState<Keyword[]>([]);
 
@@ -62,7 +60,15 @@ function AppProvider({children}: { children: React.ReactNode }) {
     });
   };
 
-  const ratingKeyword = async (keyword: string, rating: "plus" | "minus") => {
+  const ratingKeyword = async (
+    keyword: string,
+    rating: "plus" | "minus"
+  ): Promise<number> => {
+    const keywords = JSON.parse(
+      (await AsyncStorage.getItem("keywords")) || "[]"
+    );
+
+    let keywordScore = 0;
     const ratedKeywords = keywords.map((keywordInfo: Keyword) => {
       if (keywordInfo.keyword === keyword) {
         if (rating === "plus") {
@@ -73,19 +79,30 @@ function AppProvider({children}: { children: React.ReactNode }) {
           keywordInfo.totalScore -= 1;
         }
       }
+      keywordScore = keywordInfo.totalScore;
       return keywordInfo;
     });
-    await AsyncStorage.setItem("keywords", JSON.stringify(ratedKeywords), (error) => {
-      if (error) {
-        Alert.alert("Error", "Failed to save keywords.");
-      } else {
-        setKeywords(ratedKeywords);
-      }
-    });
-  }
 
-  const dispatch = useMemo(() => ({submitName, submitKeywords, ratingKeyword}), []);
-  const state = useMemo(() => ({name, keywords}), [name, keywords]);
+    await AsyncStorage.setItem(
+      "keywords",
+      JSON.stringify(ratedKeywords),
+      (error) => {
+        if (error) {
+          Alert.alert("Error", "Failed to save keywords.");
+        } else {
+          setKeywords(ratedKeywords);
+        }
+      }
+    );
+
+    return keywordScore;
+  };
+
+  const dispatch = useMemo(
+    () => ({ submitName, submitKeywords, ratingKeyword }),
+    []
+  );
+  const state = useMemo(() => ({ name, keywords }), [name, keywords]);
 
   return (
     <StateContext.Provider value={state}>

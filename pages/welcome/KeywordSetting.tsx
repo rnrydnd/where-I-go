@@ -56,7 +56,7 @@ export default function KeywordSetting({ navigation }: any) {
     const keywordObjectList: Keyword[] = keywordList.map((keyword) => {
       return {
         keyword: keyword,
-        totalScore: 0,
+        totalScore: 50,
         scoreHistory: [],
         createDate: new Date(),
         deleteDate: undefined,

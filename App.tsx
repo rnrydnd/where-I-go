@@ -1,7 +1,7 @@
-import {createStackNavigator} from "@react-navigation/stack";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import React, {useContext, useEffect} from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useContext, useEffect } from "react";
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -12,14 +12,14 @@ import Rating from "./pages/process/Rating";
 import Home from "./pages/Home";
 import KeywordSetting from "./pages/welcome/KeywordSetting";
 import FloatingMode from "./pages/FloatingMode";
-import AppProvider, {StateContext} from "./context/AppContext";
+import AppProvider, { StateContext } from "./context/AppContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const navigationRef = useNavigationContainerRef();
-  const {name} = useContext(StateContext);
+  const { name } = useContext(StateContext);
 
   // useEffect(() => {
   //   if (!navigationRef.isReady()) return;
@@ -36,14 +36,14 @@ export default function App() {
   return (
     <AppProvider>
       <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="StartGuide" component={StartGuideNavigator}/>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="StartGuide" component={StartGuideNavigator} />
           <Stack.Screen
             name="Tabs"
             component={TabNavigator}
-            options={{gestureEnabled: false}}
+            options={{ gestureEnabled: false }}
           />
-          <Stack.Screen name="Rating" component={Rating}/>
+          <Stack.Screen name="Rating" component={Rating} />
         </Stack.Navigator>
       </NavigationContainer>
     </AppProvider>
@@ -52,9 +52,9 @@ export default function App() {
 
 function StartGuideNavigator() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="NameSetting" component={NameSetting}/>
-      <Stack.Screen name="KeywordSetting" component={KeywordSetting}/>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="NameSetting" component={NameSetting} />
+      <Stack.Screen name="KeywordSetting" component={KeywordSetting} />
     </Stack.Navigator>
   );
 }
@@ -62,8 +62,8 @@ function StartGuideNavigator() {
 function TabNavigator() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="FloatingMode" component={FloatingMode}/>
-      <Tab.Screen name="Home" component={Home}/>
+      <Tab.Screen name="FloatingMode" component={FloatingMode} />
+      <Tab.Screen name="Home" component={Home} />
     </Tab.Navigator>
   );
 }
